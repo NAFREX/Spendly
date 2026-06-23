@@ -17,6 +17,8 @@ with app.app_context():
 
 @app.route("/")
 def landing():
+    if session.get("user_id"):
+        return redirect(url_for("profile"))
     return render_template("landing.html")
 
 
@@ -76,7 +78,7 @@ def login():
 
     session["user_id"]   = row["id"]
     session["user_name"] = row["name"]
-    return redirect(url_for("landing"))
+    return redirect(url_for("profile"))
 
 
 # ------------------------------------------------------------------ #
@@ -101,7 +103,30 @@ def logout():
 
 @app.route("/profile")
 def profile():
-    return "Profile page — coming in Step 4"
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    conn = get_db()
+    user = conn.execute("SELECT * FROM users WHERE id = ?", (session["user_id"],)).fetchone()
+    if user is None:
+        conn.close()
+        session.clear()
+        return redirect(url_for("landing"))
+
+    stats = conn.execute("""
+        SELECT
+            COUNT(*)                 AS expense_count,
+            COALESCE(SUM(amount), 0) AS total_spent,
+            (SELECT category FROM expenses
+             WHERE user_id = ?
+             GROUP BY category
+             ORDER BY SUM(amount) DESC
+             LIMIT 1)                AS top_category
+        FROM expenses WHERE user_id = ?
+    """, (session["user_id"], session["user_id"])).fetchone()
+    conn.close()
+
+    return render_template("profile.html", user=user, stats=stats)
 
 
 @app.route("/expenses/add")

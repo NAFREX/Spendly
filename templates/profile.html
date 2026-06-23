@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}Profile — Spendly{% endblock %}
+
+{% block content %}
+<div class="profile-wrap">
+
+    <!-- Identity card -->
+    <div class="profile-identity">
+        <div class="profile-avatar">{{ user.name.split()|map('first')|join('')|upper }}</div>
+        <div class="profile-info">
+            <h1 class="profile-name">{{ user.name }}</h1>
+            <p class="profile-email">{{ user.email }}</p>
+            <p class="profile-since">Member since {{ user.created_at[:10] }}</p>
+        </div>
+    </div>
+
+    <!-- Stat cards -->
+    <div class="profile-stats">
+        <div class="pstat-card">
+            <span class="pstat-label">Total Spent</span>
+            <span class="pstat-value">₹{{ "{:,.2f}".format(stats.total_spent) }}</span>
+        </div>
+        <div class="pstat-card">
+            <span class="pstat-label">Transactions</span>
+            <span class="pstat-value">{{ stats.expense_count }}</span>
+        </div>
+        <div class="pstat-card">
+            <span class="pstat-label">Top Category</span>
+            <span class="pstat-value">{{ stats.top_category or "—" }}</span>
+        </div>
+    </div>
+
+    <!-- Bottom two-column -->
+    <div class="profile-bottom">
+
+        <!-- Recent Transactions -->
+        <div class="profile-card">
+            <h2 class="profile-card-title">Recent Transactions</h2>
+            <table class="tx-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th class="tx-amount-col">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="tx-date">12 Apr 2025</td>
+                        <td>Groceries</td>
+                        <td><span class="cat-pill cat-food">Food</span></td>
+                        <td class="tx-amount">₹850.00</td>
+                    </tr>
+                    <tr>
+                        <td class="tx-date">11 Apr 2025</td>
+                        <td>Metro card recharge</td>
+                        <td><span class="cat-pill cat-transport">Transport</span></td>
+                        <td class="tx-amount">₹500.00</td>
+                    </tr>
+                    <tr>
+                        <td class="tx-date">10 Apr 2025</td>
+                        <td>Electricity bill</td>
+                        <td><span class="cat-pill cat-bills">Bills</span></td>
+                        <td class="tx-amount">₹2,200.00</td>
+                    </tr>
+                    <tr>
+                        <td class="tx-date">09 Apr 2025</td>
+                        <td>Doctor visit</td>
+                        <td><span class="cat-pill cat-health">Health</span></td>
+                        <td class="tx-amount">₹800.00</td>
+                    </tr>
+                    <tr>
+                        <td class="tx-date">08 Apr 2025</td>
+                        <td>Clothes</td>
+                        <td><span class="cat-pill cat-shopping">Shopping</span></td>
+                        <td class="tx-amount">₹3,200.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- By Category -->
+        <div class="profile-card">
+            <h2 class="profile-card-title">By Category</h2>
+            <div class="cat-bars">
+                <div class="cat-bar-row">
+                    <div class="cat-bar-meta">
+                        <span class="cat-bar-name">Shopping</span>
+                        <span class="cat-bar-amt">₹3,200.00</span>
+                    </div>
+                    <div class="cat-bar-track">
+                        <div class="cat-bar-fill cat-bar-shopping" style="width:100%"></div>
+                    </div>
+                </div>
+                <div class="cat-bar-row">
+                    <div class="cat-bar-meta">
+                        <span class="cat-bar-name">Other</span>
+                        <span class="cat-bar-amt">₹2,801.75</span>
+                    </div>
+                    <div class="cat-bar-track">
+                        <div class="cat-bar-fill cat-bar-other" style="width:87%"></div>
+                    </div>
+                </div>
+                <div class="cat-bar-row">
+                    <div class="cat-bar-meta">
+                        <span class="cat-bar-name">Food</span>
+                        <span class="cat-bar-amt">₹2,300.00</span>
+                    </div>
+                    <div class="cat-bar-track">
+                        <div class="cat-bar-fill cat-bar-food" style="width:72%"></div>
+                    </div>
+                </div>
+                <div class="cat-bar-row">
+                    <div class="cat-bar-meta">
+                        <span class="cat-bar-name">Bills</span>
+                        <span class="cat-bar-amt">₹2,200.00</span>
+                    </div>
+                    <div class="cat-bar-track">
+                        <div class="cat-bar-fill cat-bar-bills" style="width:69%"></div>
+                    </div>
+                </div>
+                <div class="cat-bar-row">
+                    <div class="cat-bar-meta">
+                        <span class="cat-bar-name">Health</span>
+                        <span class="cat-bar-amt">₹800.00</span>
+                    </div>
+                    <div class="cat-bar-track">
+                        <div class="cat-bar-fill cat-bar-health" style="width:25%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /.profile-bottom -->
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>lucide.createIcons();</script>
+{% endblock %}
